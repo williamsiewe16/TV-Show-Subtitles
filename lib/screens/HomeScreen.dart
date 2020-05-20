@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 /**
  * Tabs imports
@@ -7,6 +8,8 @@ import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:tvShowSubtitles/screens/tabs/HomeTab.dart';
 import 'package:tvShowSubtitles/screens/tabs/LibraryTab.dart';
 import 'package:tvShowSubtitles/screens/tabs/SettingsTab.dart';
+
+Color backColor = Color.fromRGBO(255, 0, 0, 0.2);
 
 class Home extends StatefulWidget{
   @override
@@ -17,7 +20,7 @@ class HomeState extends State{
 
   int selectedIndex = 0;
   PageController pageController;
-  final bottomBarKey = GlobalKey();
+  final bottomBarKey = GlobalKey<CurvedNavigationBarState>();
 
   void initState() {
     super.initState();
@@ -33,19 +36,23 @@ class HomeState extends State{
            children: <Widget>[
              HomeTab(), LibraryTab(), SettingsTab()
            ],
+           onPageChanged: (index){
+             bottomBarKey.currentState.setPage(index);
+           },
          ),
        ),
-       bottomNavigationBar: FancyBottomNavigation(
-        // key: bottomBarKey,
-         inactiveIconColor: Colors.redAccent,
-        // barBackgroundColor: Colors.red,
-         initialSelection: selectedIndex,
-         tabs: [
-           TabData(iconData: Icons.home, title: "Home"),
-           TabData(iconData: Icons.library_books, title: "Library"),
-           TabData(iconData: Icons.settings, title: "Settings")
+       bottomNavigationBar: CurvedNavigationBar(
+         height: 55,
+         key: bottomBarKey,
+         backgroundColor: backColor,
+         buttonBackgroundColor: Colors.white,
+         color: Color.fromRGBO(250, 250, 250, 1),
+         items: [
+           Icon(Icons.home, size: 20),
+           Icon(Icons.library_books, size: 20),
+           Icon(Icons.settings, size: 20),
          ],
-         onTabChangedListener: (position){
+         onTap: (position){
            pageController.animateToPage(
                position,
                duration: Duration(milliseconds: 400),
@@ -56,6 +63,20 @@ class HomeState extends State{
      );
   }
 
+  /*Scaffold(
+  bottomNavigationBar: CurvedNavigationBar(
+  backgroundColor: Colors.blueAccent,
+  items: <Widget>[
+  Icon(Icons.add, size: 30),
+  Icon(Icons.list, size: 30),
+  Icon(Icons.compare_arrows, size: 30),
+  ],
+  onTap: (index) {
+  //Handle button tap
+  },
+  ),
+  body: Container(color: Colors.blueAccent),
+  );*/
   @override
   void dispose() {
     super.dispose();
