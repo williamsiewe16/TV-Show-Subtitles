@@ -11,12 +11,12 @@ import 'package:tvShowSubtitles/screens/tabs/SettingsTab.dart';
 
 Color backColor = Color.fromRGBO(255, 0, 0, 0.2);
 
-class Home extends StatefulWidget{
+class HomeScreen extends StatefulWidget{
   @override
-  State<StatefulWidget> createState() => HomeState();
+  State<StatefulWidget> createState() => HomeScreenState();
 }
 
-class HomeState extends State{
+class HomeScreenState extends State<HomeScreen>{
 
   int selectedIndex = 0;
   PageController pageController;

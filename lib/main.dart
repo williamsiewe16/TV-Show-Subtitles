@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tvShowSubtitles/navigation/routes.dart';
+import 'package:provider/provider.dart';
+import 'package:tvShowSubtitles/services/services.dart';
 
-void main() => runApp(TSS());
+void main() => runApp(
+   MultiProvider(
+     providers: [
+       Provider<SubtitlesListService>(create: (context) => SubtitlesListService())
+     ],
+     child: TSS(),
+   )
+);
 
 class TSS extends StatelessWidget {
   // This widget is the root of your application.

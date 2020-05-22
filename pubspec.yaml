@@ -17,6 +17,10 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  dio: ^3.0.9
+  provider: ^3.0.0
+  flutter_downloader: ^1.4.4
+  curved_navigation_bar:  ^0.3.2
   fancy_bottom_navigation: ^0.1.0
   flutter:
     sdk: flutter

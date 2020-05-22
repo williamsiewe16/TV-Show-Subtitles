@@ -17,9 +17,12 @@ class Subtitle {
     this.origin
   });
 
-  static FromMap(Map map){
+  show(){
+    print(this.season+" "+this.episode+" "+this.title+" "+this.language+" "+this.version+" "+this.link+" "+this.origin);
+  }
+
+  static fromMap(Map map){
     if(map != null){
-     if(map.length == 7){
        return new Subtitle(
            season : map["season"],
            episode: map["episode"],
@@ -30,8 +33,17 @@ class Subtitle {
            origin: map["origin"]
        );
      }else{
-       return null;
-     }
+      return null;
     }
   }
+
+  toMap() => {
+    "season" : this.season,
+    "episode": this.episode,
+    "title": this.title,
+    "language": this.language,
+    "version": this.version,
+    "link": this.link,
+    "origin": this.origin
+  };
 }

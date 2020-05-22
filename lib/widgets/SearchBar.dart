@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 class SearchBar extends StatefulWidget{
-  final Key key; final color; final textController;
-  SearchBar({@required this.key, @required this.color, @required this.textController});
+  final Key key; final color; final textController; final focusNode;
+  SearchBar({@required this.key, @required this.color, @required this.textController, @required this.focusNode});
 
   @override
   State<StatefulWidget> createState() => SearchBarState();
@@ -40,15 +40,13 @@ class SearchBarState extends State<SearchBar> with SingleTickerProviderStateMixi
                color: widget.color,
                child: Row(
                  children: <Widget>[
-                   IconButton(icon: Icon(Icons.keyboard_backspace), onPressed: (){
-                     toggleAnimation();
-                   }),
-                   SizedBox(
-                     width: 3*size.width/4,
+                   IconButton(icon: Icon(Icons.keyboard_backspace), onPressed: () => toggleAnimation()),
+                   SizedBox(width: 3*size.width/4,
                      child: TextField(
-                       controller: widget.textController, decoration: InputDecoration(hintText: "Type a text...")
-                     ),
-                   )
+                       focusNode: widget.focusNode,
+                       controller: widget.textController, decoration: InputDecoration(hintText: "Search a TV Show...")
+                     )),
+                  Expanded(child: IconButton(icon: Icon(Icons.clear), onPressed: () => widget.textController.text = ""))
                  ],
                ),
             ),
