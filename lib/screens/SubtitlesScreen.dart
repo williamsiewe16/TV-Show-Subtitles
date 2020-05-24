@@ -1,13 +1,14 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tvShowSubtitles/models/Subtitle.dart';
-import 'package:tvShowSubtitles/screens/HomeScreen.dart';
-import 'package:tvShowSubtitles/widgets/CustomActionButtonWithText.dart';
+import 'package:tvShowSubtitles/services/notifiers.dart';
 import 'package:tvShowSubtitles/widgets/CustomFloatingActionButton.dart';
-import 'package:tvShowSubtitles/navigation/routes.dart';
 import 'package:tvShowSubtitles/widgets/CustomSliverAppBar.dart';
 import 'package:tvShowSubtitles/widgets/SubtitleListZone.dart';
-import 'package:tvShowSubtitles/widgets/SubtitleWidget.dart';
+import 'package:tvShowSubtitles/services/api.dart';
 
 class SubtitlesScreen extends StatefulWidget{
   @override
@@ -19,8 +20,11 @@ class SubtitlesScreenState extends State<SubtitlesScreen>{
   List<Subtitle> subtitles = [];
   Future<dynamic> data;
   Future<dynamic> image;
+  String backgroundImage;
   GlobalKey<CustomSliverAppBarState> appBarKey;
   GlobalKey<SubtitleListZoneState> listKey;
+  String lastSeason;
+  bool mustDownloadTester = true;
 
   void initState() {
     super.initState();
@@ -31,56 +35,63 @@ class SubtitlesScreenState extends State<SubtitlesScreen>{
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    Map params = ModalRoute.of(context).settings.arguments;
-    data  = _getSubtitles(params["id"]);
+    Map show = ModalRoute.of(context).settings.arguments; var idShow = show["id"], showName = show["name"];
+    data = getSubtitles(idShow);
 
     return Scaffold(
-      /*appBar: AppBar(
-        backgroundColor: backColor,
-        leading: IconButton(/*color: Colors.redAccent,*/icon: Icon(Icons.arrow_back), onPressed: () => Navigator.of(context).pop()),
-        title: Text('${params["name"]}'/*,style: TextStyle(color: Colors.redAccent)*/)
-      ),*/
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled){
           return <Widget>[
-            CustomSliverAppBar(key: appBarKey, title: params["name"])
+            CustomSliverAppBar(key: appBarKey, title: showName)
           ];
         },
-        body: /*Center(child: Text('google'))*/Container(
+        body: Container(
         width: size.width,
-        child: FutureBuilder(
-            future: data,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-              //  getImages(params["name"],new Subtitle());
-                return Center(child: CircularProgressIndicator());
-              }
-              else {
-                if (!snapshot.hasData) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      IconButton(icon: Icon(Icons.refresh), iconSize: size.width/8, onPressed: () => setState(() {})),
-                      Text('server unreachable')
-                    ],
-                  );
-                } else {
-                  var subtitlesMap = snapshot.data["addic7ed"]["subtitles"]; subtitles = [];
-                  for(var i=0; i<subtitlesMap.length; i++ ) {
-                    subtitlesMap[i]["origin"] = "addic7ed";
-                    var sub = Subtitle.fromMap(subtitlesMap[i]);
-                    subtitles.add(sub);
+        child: Consumer<SubtitlesListService>(
+          builder: (context,subtitlesListService,child){
+            if(subtitlesListService.existsShow(idShow)){
+              print('ana');
+              show["lastSeason"] = subtitlesListService.getShow(idShow)["lastSeason"];
+              return SubtitleListZone(key: listKey, subtitles: subtitlesListService.getShow(idShow)["subtitles"], show: show, myKey: listKey);
+            }else{
+              print('bnb');
+              return FutureBuilder(
+                  future: data,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      //  getImages(showName,new Subtitle());
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    else {
+                      if (!snapshot.hasData) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            IconButton(icon: Icon(Icons.refresh), iconSize: size.width/8, onPressed: () => setState(() {})),
+                            Text('server unreachable')
+                          ],
+                        );
+                      } else {
+                        var subtitlesMap = snapshot.data["addic7ed"]["subtitles"]; subtitles = <Subtitle>[];
+                        for(var i=0; i<subtitlesMap.length; i++ ) {
+                          subtitlesMap[i]["origin"] = "addic7ed";
+                          var sub = Subtitle.fromMap(subtitlesMap[i]);
+                          subtitles.add(sub);
+                        }
+                        if(backgroundImage == null) getImages(showName,subtitles[0]);
+                        subtitlesListService.addSubtitlesToShow(show,subtitles,snapshot.data["lastSeason"]);
+                        show["lastSeason"] = subtitlesListService.getShow(idShow)["lastSeason"];
+                        return SubtitleListZone(key: listKey, subtitles: subtitlesListService.getShow(idShow)["subtitles"], show: show, myKey: listKey);
+                      }
+                    }
                   }
-                  getImages(params["name"],subtitles[0]);
-                  return SubtitleListZone(key: listKey, subtitles: subtitles, show: params["name"]);
-                }
-              }
+              );
             }
+          },
+        )
+
         ),
       ),
-      ),
-      floatingActionButton: CustomFloatingActionButton(subtitles: subtitles)
-      //listKey.currentState.updateSubtitlesList(subtitles);
     );
   }
   @override
@@ -89,14 +100,17 @@ class SubtitlesScreenState extends State<SubtitlesScreen>{
   }
 
   void getImages(name,subtitle){
-    appBarKey.currentState.getImage(name, subtitle);
+      image = getFutureImage(name, subtitle).then((data){
+        if(data != null){
+          backgroundImage = data["imageURL"];
+          appBarKey.currentState.updateFound(data["imageURL"]);
+        }
+      });
   }
 
-  Future<dynamic> _getSubtitles(idShow) async {
-    Dio dio = new Dio();
-    final response = await dio.get("$server/api/show/$idShow");
-    Map<String,dynamic> data = response.data;
-    return data;
-  }
+
+
+
+
 
 }

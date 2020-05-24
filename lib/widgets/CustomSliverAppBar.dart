@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:dio/dio.dart';
@@ -14,8 +15,7 @@ class CustomSliverAppBar extends StatefulWidget{
 
 class CustomSliverAppBarState extends State<CustomSliverAppBar> {
 
-  Future<dynamic> image;
-  ValueNotifier<String> tester = ValueNotifier<String>("not");
+  String image;
 
   @override
   void initState() {
@@ -24,43 +24,25 @@ class CustomSliverAppBarState extends State<CustomSliverAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    print('built');
     var size = MediaQuery.of(context).size;
     return SliverAppBar(
       expandedHeight: size.width/2,
       floating: true,
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
-        //key: ,
-          title: RaisedButton(child: Text('${widget.title}'/*,style: TextStyle(color: Colors.redAccent)*/), onPressed: () => tester.value += "god"),
-          background: ValueListenableBuilder(
-            valueListenable: tester,
-            builder: (BuildContext context, String value, Widget child){
-              print(value);
-              if(value == "not"){
-                return Center(child: Text('waiting...'));
-              }
-              else{
-                return Center(child: Text('got it'));
-              }
-            },
-          )
+          title:Text('${widget.title}'),
+          background: image != null ?
+          Image.network(image, fit: BoxFit.cover)
+              :
+          Image.network("https://cdn.pixabay.com/photo/2015/06/19/21/24/the-road-815297__340.jpg", fit: BoxFit.cover)
       ),
     );
   }
 
-  void getImage(String name, Subtitle subtitle){
-    print('here we gooo');
-      tester.value = "ready";
-  }
-  // image = _getFutureImage(name, subtitle);
-
-
-  Future<dynamic> _getFutureImage(String name,Subtitle subtitle) async {
-    Dio dio = new Dio();
-    final response = await dio.get("http://www.ip-api.com/json");//"$server/api/show/image?name=$name&id=$id");
-    Map<String,dynamic> data = response.data;
-    return data;
+  void updateFound(imageURL){
+    setState(() {
+      image = imageURL;
+    });
   }
 
   @override
@@ -87,3 +69,24 @@ class CustomSliverAppBarState extends State<CustomSliverAppBar> {
                     }
                   },
                 )*/
+
+/* FutureBuilder(
+                  future: image,
+                  builder: (context,snapshot){
+                    if(snapshot.connectionState == ConnectionState.waiting){
+                      return Center(child: CircularProgressIndicator());
+                    }else{
+                      if(!snapshot.hasData){
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            IconButton(icon: Icon(Icons.refresh), iconSize: size.width/8, onPressed: () => setState(() {})),
+                            Text('server unreachable')
+                          ],
+                        );
+                      }else{
+                        return Image.network("https://data.pixiz.com/output/user/frame/preview/400x400/3/6/2/2/282263_82381.jpg", fit: BoxFit.fill);
+                      }
+                    }
+                  },
+                );*/

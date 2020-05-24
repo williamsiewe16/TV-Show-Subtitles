@@ -47,3 +47,18 @@ class Subtitle {
     "origin": this.origin
   };
 }
+
+class A{
+  final name;
+  static var _instance;
+
+  A._({this.name});
+
+  factory A.getInstance(){
+    if(_instance == null) return A._();
+    return _instance;
+  }
+}
+
+var a = A.getInstance();
+

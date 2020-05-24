@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 import 'package:tvShowSubtitles/widgets/SearchResult.dart';
-import 'package:tvShowSubtitles/navigation/routes.dart';
+import 'package:tvShowSubtitles/services/api.dart';
+
 
 class SearchResultZone extends StatefulWidget{
   final search; final unFocus;
@@ -29,7 +29,7 @@ class SearchResultZoneState extends State<SearchResultZone> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     Future<dynamic> data = widget.search != ""
-        ? _getShows(widget.search)
+        ? getShows(widget.search)
         : null;
 
     return
@@ -74,11 +74,6 @@ class SearchResultZoneState extends State<SearchResultZone> {
       );
   }
 
-  Future<dynamic> _getShows(text) async {
-    Dio dio = new Dio();
-    final response = await dio.get("$server/api/search?text=$text");
-    List<dynamic> data = response.data;
-    return data;
-  }
+
 
 }

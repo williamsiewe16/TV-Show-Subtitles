@@ -1,7 +1,8 @@
-import 'package:dio/dio.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:tvShowSubtitles/models/Subtitle.dart';
-import 'package:tvShowSubtitles/navigation/routes.dart';
+import 'package:tvShowSubtitles/services/api.dart';
 
 class SubtitleWidget extends StatefulWidget{
   final Subtitle subtitle;
@@ -19,11 +20,12 @@ class SubtitleWidgetState extends State<SubtitleWidget>{
   @override
   void initState() {
     super.initState();
-    title = "${widget.show} - ${widget.subtitle.season}x${widget.subtitle.episode} - ${widget.subtitle.title}.${widget.subtitle.version}.${widget.subtitle.language}";
   }
 
   @override
   Widget build(BuildContext context) {
+    title = "${widget.show} - ${widget.subtitle.season}x${widget.subtitle.episode} - ${widget.subtitle.title}.${widget.subtitle.version}.${widget.subtitle.language}";
+
     return Column(
       children: <Widget>[
         ListTile(
@@ -42,15 +44,17 @@ class SubtitleWidgetState extends State<SubtitleWidget>{
   }
 
   void download() async{
-    var url = "$server/api/download/subtitle";
-    Dio dio = new Dio();
+   await getFileURL(widget.subtitle, title);
     try{
-      var response = await dio.post(url,data: {"subtitle": widget.subtitle.toMap(), "fileName": title});
-      var downloadUrl = "$server/${response.data["fileUrl"]}";
-    print(downloadUrl);
+      /*Directory dir = await new Directory('dir/path').create(recursive: true);
+      print(dir.path);*/
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      String appDocPath = appDocDir.path;
+      print("$appDocPath");
     }catch(e){
       print(e);
     }
+
   }
 
 }
