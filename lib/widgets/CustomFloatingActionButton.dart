@@ -2,9 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:tvShowSubtitles/models/Subtitle.dart';
 import 'package:tvShowSubtitles/screens/HomeScreen.dart';
-import 'package:tvShowSubtitles/services/notifiers.dart';
 import 'package:tvShowSubtitles/widgets/CustomActionButtonWithText.dart';
 import 'dart:math';
 
@@ -44,7 +42,7 @@ class CustomFloatingActionButtonState extends State<CustomFloatingActionButton> 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    SubtitlesListService subtitlesListService = Provider.of<SubtitlesListService>(context);
+    //SubtitlesListService subtitlesListService = Provider.of<SubtitlesListService>(context);
     /* print("---");
          print(subtitles);
          print('---');*/

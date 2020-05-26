@@ -6,6 +6,7 @@ class Subtitle {
   final version;
   final link;
   final origin;
+  final show;
 
   Subtitle({
     this.season,
@@ -14,23 +15,25 @@ class Subtitle {
     this.language,
     this.version,
     this.link,
-    this.origin
+    this.origin,
+    this.show
   });
 
-  show(){
-    print(this.season+" "+this.episode+" "+this.title+" "+this.language+" "+this.version+" "+this.link+" "+this.origin);
+  showMe(){
+    print(this.season+" "+this.episode+" "+this.title+" "+this.language+" "+this.version+" "+this.link+" "+this.origin+" "+this.show);
   }
 
   static fromMap(Map map){
     if(map != null){
-       return new Subtitle(
+       return Subtitle(
            season : map["season"],
            episode: map["episode"],
            title: map["title"],
            language: map["language"],
            version: map['version'],
            link: map["link"],
-           origin: map["origin"]
+           origin: map["origin"],
+           show: map["show"]
        );
      }else{
       return null;
@@ -44,21 +47,8 @@ class Subtitle {
     "language": this.language,
     "version": this.version,
     "link": this.link,
-    "origin": this.origin
+    "origin": this.origin,
+    "show": this.show
   };
 }
-
-class A{
-  final name;
-  static var _instance;
-
-  A._({this.name});
-
-  factory A.getInstance(){
-    if(_instance == null) return A._();
-    return _instance;
-  }
-}
-
-var a = A.getInstance();
 

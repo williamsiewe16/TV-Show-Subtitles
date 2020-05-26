@@ -1,10 +1,10 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:tvShowSubtitles/database/sembast.db.dart';
 import 'package:tvShowSubtitles/models/Subtitle.dart';
 import 'package:tvShowSubtitles/services/api.dart';
+import 'package:tvShowSubtitles/services/Providers/downloadService.dart';
 
-class SubtitleWidget extends StatefulWidget{
+class SubtitleWidget extends StatefulWidget with WidgetsBindingObserver{
   final Subtitle subtitle;
   final show;
 
@@ -30,7 +30,7 @@ class SubtitleWidgetState extends State<SubtitleWidget>{
       children: <Widget>[
         ListTile(
             leading: IconButton(icon: Icon(Icons.subtitles)),
-            trailing: IconButton(icon: Icon(Icons.file_download), onPressed: () => download()),
+            trailing: IconButton(icon: Icon(Icons.file_download), onPressed: () => tryDownload(context, widget.subtitle, widget.show, title)),
             title: Text("$title")
         ),
         Divider()
@@ -43,18 +43,26 @@ class SubtitleWidgetState extends State<SubtitleWidget>{
     super.dispose();
   }
 
-  void download() async{
-   await getFileURL(widget.subtitle, title);
-    try{
-      /*Directory dir = await new Directory('dir/path').create(recursive: true);
-      print(dir.path);*/
-      Directory appDocDir = await getApplicationDocumentsDirectory();
-      String appDocPath = appDocDir.path;
-      print("$appDocPath");
-    }catch(e){
-      print(e);
-    }
+  tryDownload(context,Subtitle subtitle, String show, String title){
+    DownloadService.downloadFile(subtitle, show, title).then((code){
+      if(code == 0) showSnackBar(context, Colors.yellow, "Problem when trying to ask storage permission",700);
+     // else if(code == 1) ;
+      else if(code == 2)  showSnackBar(context, Colors.blueAccent, "File already Downloaded",700);
+      else if(code == 3)  showSnackBar(context, Colors.red, "Error while downloading the file",800);
+      else if(code == 4){
+        showSnackBar(context, Colors.green, "Download completed: $title",1000);
+        print(subtitle.toMap());
+        AppDatabase.addToStore('subtitles', subtitle.toMap()).then((val) => print('$val added'));
+      }
+    });
+  }
 
+  showSnackBar(context, color, text, int duration){
+    Scaffold.of(context).showSnackBar(SnackBar(
+      duration: Duration(milliseconds: duration),
+      backgroundColor: color,
+      content: Text('$text'),
+    ));
   }
 
 }

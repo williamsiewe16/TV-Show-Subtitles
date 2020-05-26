@@ -1,10 +1,8 @@
 import 'dart:async';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tvShowSubtitles/models/Subtitle.dart';
-import 'package:tvShowSubtitles/services/notifiers.dart';
+import 'package:tvShowSubtitles/services/Providers/subtitlesListService.dart';
 import 'package:tvShowSubtitles/widgets/CustomFloatingActionButton.dart';
 import 'package:tvShowSubtitles/widgets/CustomSliverAppBar.dart';
 import 'package:tvShowSubtitles/widgets/SubtitleListZone.dart';
@@ -47,7 +45,7 @@ class SubtitlesScreenState extends State<SubtitlesScreen>{
         },
         body: Container(
         width: size.width,
-        child: Consumer<SubtitlesListService>(
+        child: /*Text('google')*/ Consumer<SubtitlesListService>(
           builder: (context,subtitlesListService,child){
             if(subtitlesListService.existsShow(idShow)){
               print('ana');
@@ -75,6 +73,7 @@ class SubtitlesScreenState extends State<SubtitlesScreen>{
                         var subtitlesMap = snapshot.data["addic7ed"]["subtitles"]; subtitles = <Subtitle>[];
                         for(var i=0; i<subtitlesMap.length; i++ ) {
                           subtitlesMap[i]["origin"] = "addic7ed";
+                          subtitlesMap[i]["show"] = showName;
                           var sub = Subtitle.fromMap(subtitlesMap[i]);
                           subtitles.add(sub);
                         }
@@ -94,6 +93,7 @@ class SubtitlesScreenState extends State<SubtitlesScreen>{
       ),
     );
   }
+
   @override
   void dispose() {
     super.dispose();

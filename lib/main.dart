@@ -2,17 +2,20 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tvShowSubtitles/database/sembast.db.dart';
 import 'package:tvShowSubtitles/navigation/routes.dart';
 import 'package:provider/provider.dart';
-import 'package:tvShowSubtitles/services/notifiers.dart';
+import 'package:tvShowSubtitles/services/Providers/subtitlesListService.dart';
+import 'package:tvShowSubtitles/services/Providers/downloadService.dart';
 
 void main(){
+  WidgetsFlutterBinding.ensureInitialized();
+  AppDatabase.initDB();
   Provider.debugCheckInvalidValueType = null;
   runApp(
-      /*ChangeNotifierProvider(*/MultiProvider(
+      MultiProvider(
         providers: [
-          /*Provider<SubtitlesListService>*/ChangeNotifierProvider(create: (context) => SubtitlesListService()),
-          /*Provider<NumModel>*/ChangeNotifierProvider(create: (context) => NumModel()),
+          ChangeNotifierProvider(create: (context) => SubtitlesListService()),
         ],
         child: TSS(),
       )

@@ -39,7 +39,6 @@ class SubtitlesListService extends ChangeNotifier{
     var showName = show["name"], lastSeason = show["lastSeason"];
     _valueSaved[showName]["lastSeason"] = lastSeason;
     _value.addAll(data);
-    notifyListeners();
   }
 
 }
