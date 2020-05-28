@@ -23,7 +23,7 @@ class Subtitle {
     print(this.season+" "+this.episode+" "+this.title+" "+this.language+" "+this.version+" "+this.link+" "+this.origin+" "+this.show);
   }
 
-  static fromMap(Map map){
+  static Subtitle fromMap(Map map){
     if(map != null){
        return Subtitle(
            season : map["season"],

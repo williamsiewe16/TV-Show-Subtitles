@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:tvShowSubtitles/models/Subtitle.dart';
 import 'package:tvShowSubtitles/services/api.dart';
 import 'package:tvShowSubtitles/services/Providers/downloadService.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SubtitleDownloaded extends StatefulWidget with WidgetsBindingObserver{
   final Subtitle subtitle;
@@ -14,6 +18,7 @@ class SubtitleDownloaded extends StatefulWidget with WidgetsBindingObserver{
 
 class SubtitleDownloadedState extends State<SubtitleDownloaded>{
   var title;
+  var path;
 
   @override
   void initState() {
@@ -26,10 +31,13 @@ class SubtitleDownloadedState extends State<SubtitleDownloaded>{
 
     return Column(
       children: <Widget>[
-        ListTile(
-            leading: IconButton(icon: Icon(Icons.subtitles)),
-            trailing: IconButton(icon: Icon(Icons.file_download), onPressed: (){}),
-            title: Text("$title")
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListTile(
+              leading: IconButton(icon: Icon(Icons.subtitles), onPressed: () => print(path)),
+              trailing: IconButton(icon: Icon(Icons.play_arrow), onPressed: () => checkVideo(context)),
+              title: Text("$title")
+          ),
         ),
         Divider()
       ],
@@ -41,4 +49,13 @@ class SubtitleDownloadedState extends State<SubtitleDownloaded>{
     super.dispose();
   }
 
+  Future<String> checkVideo(context) async{
+   // if(await checkPermission(Permission.storage)){
+   //   File video = await ImagePicker.pickVideo(source: ImageSource.gallery);
+      Navigator.of(context).pushNamed('/video');
+   //   path = video;
+   //   return video.path;
+  //  }
+    return "";
+  }
 }

@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:tvShowSubtitles/services/api.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tvShowSubtitles/models/Subtitle.dart';
 import 'package:dio/dio.dart';
@@ -24,7 +24,7 @@ class DownloadService {
           return 2;
         }else{
           try{
-            var fileURL = "https://cdn.pixabay.com/photo/2015/06/19/21/24/the-road-815297__340.jpg"; //await getFileURL(subtitle, title);
+            var fileURL = await getFileURL(subtitle, fileName); //"https://cdn.pixabay.com/photo/2015/06/19/21/24/the-road-815297__340.jpg"; //
             Dio dio = new Dio();
             Response response = await dio.get(fileURL, onReceiveProgress: showDownloadProgress,
               options: Options(responseType: ResponseType.bytes, followRedirects: false, validateStatus: (status) { return status < 500; }),

@@ -44,7 +44,7 @@ class SubtitleWidgetState extends State<SubtitleWidget>{
   }
 
   tryDownload(context,Subtitle subtitle, String show, String title){
-    DownloadService.downloadFile(subtitle, show, title).then((code){
+     DownloadService.downloadFile(subtitle, show, title).then((code){
       if(code == 0) showSnackBar(context, Colors.yellow, "Problem when trying to ask storage permission",700);
      // else if(code == 1) ;
       else if(code == 2)  showSnackBar(context, Colors.blueAccent, "File already Downloaded",700);

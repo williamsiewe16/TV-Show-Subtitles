@@ -8,9 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:tvShowSubtitles/services/Providers/subtitlesListService.dart';
 import 'package:tvShowSubtitles/services/Providers/downloadService.dart';
 
-void main(){
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  AppDatabase.initDB();
+  await AppDatabase.initDB();
   Provider.debugCheckInvalidValueType = null;
   runApp(
       MultiProvider(

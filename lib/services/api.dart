@@ -36,12 +36,13 @@ Future<dynamic> getFutureImage(String name,Subtitle subtitle) async {
   }
 }
 
-Future<void> getFileURL(Subtitle sub, String fileName) async{
+Future<String> getFileURL(Subtitle sub, String fileName) async{
   var url = "$apiURL/api/download/subtitle";
     try{
       var response = await dio.post(url,data: {"subtitle": sub.toMap(), "fileName": fileName});
       var downloadUrl = "$apiURL/${response.data["fileUrl"]}";
     print(downloadUrl);
+    return downloadUrl;
     }catch(e){
       print(e);
     }

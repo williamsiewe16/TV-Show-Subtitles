@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
  */
 import 'package:tvShowSubtitles/screens/HomeScreen.dart';
 import 'package:tvShowSubtitles/screens/SubtitlesScreen.dart';
+import 'package:tvShowSubtitles/widgets/VideoPlayerScreen.dart';
 
 final routes = {
   '/': (context) => HomeScreen(),
-  '/subtitles': (context) => SubtitlesScreen()
+  '/subtitles': (context) => SubtitlesScreen(),
+    '/video': (context) => VideoPlayerScreen()
 };
 
 final server = "http://192.168.43.47:6000";

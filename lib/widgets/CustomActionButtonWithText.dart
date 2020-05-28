@@ -96,10 +96,10 @@ class CustomActionButtonWithTextState extends State<CustomActionButtonWithText> 
                       Text('$val'),
                       Radio(
                       value: val,
-                      groupValue: language,
+                      groupValue:  text == "Languages" ? language : season,
                       onChanged: (val){
                         setState((){
-                          language = val;
+                          text == "Languages" ? language = val : season = val;
                         });
                       },
                           activeColor: Colors.blue)
@@ -115,6 +115,7 @@ class CustomActionButtonWithTextState extends State<CustomActionButtonWithText> 
           ),
           actions: <Widget>[
             FlatButton(child: Text('ok'), onPressed: () => close(context)),
+            FlatButton(child: Text('remove Filter'), onPressed: () => close(context)),
             FlatButton(child: Text('remove Filter'), onPressed: () => dismiss(context)),
           ],
         );
@@ -122,7 +123,7 @@ class CustomActionButtonWithTextState extends State<CustomActionButtonWithText> 
     );
   }
 
-  List getAllSeasons(val){
+  List getAllSeasons(int val){
     var seasons = [];
     for(int i=val; i>0; i--) seasons.add(i);
     return List.from(seasons.reversed);

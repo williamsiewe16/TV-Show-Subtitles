@@ -14,16 +14,19 @@ class LibraryTabState extends State{
 
   void initState() {
     super.initState();
-    subtitles = AppDatabase.readStore('subtitles');
   }
 
   @override
   Widget build(BuildContext context) {
+    subtitles = AppDatabase.readStore('subtitles');
     var size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Library')
+        title: Text('Library'),
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.delete), onPressed: () => AppDatabase.dropStore('subtitles'))
+        ],
       ),
       body: FutureBuilder(
         future: subtitles,
@@ -32,12 +35,13 @@ class LibraryTabState extends State{
             return CircularProgressIndicator();
           }else{
             if(!snapshot.hasData){
+              print(snapshot.error);
               return RefreshIndicator(
-                child: Center(child: Icon(Icons.refresh, size: size.width/7, color: Colors.grey)),
-                onRefresh: (){
-                  setState(() => subtitles = AppDatabase.readStore('subtitles'));
+                child: Center(child: InkWell(child: Icon(Icons.refresh, size: size.width/7, color: Colors.grey), onTap: () => setState(() => subtitles = AppDatabase.readStore('subtitles')))),
+               /* onRefresh: (){print('go');//AppDatabase.dropStore('subtitles');
+                 // setState(() => subtitles = AppDatabase.readStore('subtitles'));
                   return null;
-                }
+                }*/
               );
             }else{
               if(snapshot.data.length != 0 ){
