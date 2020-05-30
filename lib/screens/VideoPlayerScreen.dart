@@ -18,7 +18,7 @@ class VideoPlayerScreenState extends State<VideoPlayerScreen>{
   var chewieController;
   var playerWidget;
   File video;
-  String subtitlePath;
+  File subtitleFile;
 
   void initState() {
     super.initState();
@@ -26,38 +26,34 @@ class VideoPlayerScreenState extends State<VideoPlayerScreen>{
 
   @override
   Widget build(BuildContext context) {
+    Map params = ModalRoute.of(context).settings.arguments;
     var size = MediaQuery.of(context).size;
     video = File("/storage/emulated/0/documents/power.mkv");
-    subtitlePath = "http://192.168.43.47:3000/assets/images/power.vtt";//"file:///storage/emulated/0/documents/power.vtt";
-    //print(File(subtitlePath).existsSync());
+    subtitleFile = File("storage/emulated/0/documents/power.srt" /*"${params["subtitlePath"]}"*/);
+    var subtitleContent = subtitleFile.existsSync()? subtitleFile.readAsStringSync() : "";
 
-
-   videoPlayerController = VideoPlayerController./*network("http://192.168.43.47:3000/assets/images/power.mkv");*/file(video);
+    videoPlayerController = VideoPlayerController./*network("http://192.168.43.47:3000/assets/images/power.mkv");*/file(video);
     chewieController = ChewieController(
       videoPlayerController: videoPlayerController,
       aspectRatio: 3 / 2,
       autoPlay: true,
       looping: true,
+      //materialProgressColors: ChewieProgressColors(backgroundColor: Colors.redAccent)
     );
 
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Card(
-              elevation: 5.0,
-              child: SubTitleWrapper(
-                  videoPlayerController: videoPlayerController,
-                  subtitleController: SubtitleController(
-                    subtitleUrl: subtitlePath,
-                    showSubtitles: true,
-                  ),
-                  subtitleStyle: SubtitleStyle(textColor: Colors.white, hasBorder: true),
-                  videoChild: Chewie(
-                    controller: chewieController,
-                  ))),
+      body: /*Center(child: Text('google'))*/ SubTitleWrapper(
+            videoPlayerController: videoPlayerController,
+            subtitleController: SubtitleController(
+             // subtitleUrl: subtitlePath,
+              subtitlesContent: subtitleContent,
+              showSubtitles: true,
+            ),
+            subtitleStyle: SubtitleStyle(textColor: Colors.white, hasBorder: true),
+            videoChild: Chewie(
+              controller: chewieController,
+            )
         )
-      )
     );
   }
 

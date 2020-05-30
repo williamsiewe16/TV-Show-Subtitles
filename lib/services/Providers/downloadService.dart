@@ -10,21 +10,23 @@ import 'package:dio/dio.dart';
 
 class DownloadService {
 
-  static Future<int> downloadFile(Subtitle subtitle, String show, String fileName) async{
+  static String appDocDir = "storage/emulated/0/TVShowSubtitles";
+
+  static Future<int> downloadFile(Subtitle subtitle) async{
     try{
       if(await checkPermission(Permission.storage)){
         /*Directory appDocDir = await getApplicationDocumentsDirectory();
         String path = "${appDocDir.path}/TSS";*/
 
-        String path = "storage/emulated/0/TVShowSubtitles/Shows/$show/season ${subtitle.season}";
+        String path = "$appDocDir/Shows/${subtitle.show}/season ${subtitle.season}";
 
         Directory dir = await Directory(path).create(recursive: true);
-        File file = File("$path/$fileName.srt");
+        File file = File("$path/${subtitle.getFileName()}");
         if(await file.exists()){
           return 2;
         }else{
           try{
-            var fileURL = await getFileURL(subtitle, fileName); //"https://cdn.pixabay.com/photo/2015/06/19/21/24/the-road-815297__340.jpg"; //
+            var fileURL = await getFileURL(subtitle); //"https://cdn.pixabay.com/photo/2015/06/19/21/24/the-road-815297__340.jpg"; //
             Dio dio = new Dio();
             Response response = await dio.get(fileURL, onReceiveProgress: showDownloadProgress,
               options: Options(responseType: ResponseType.bytes, followRedirects: false, validateStatus: (status) { return status < 500; }),

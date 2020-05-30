@@ -19,9 +19,9 @@ class Subtitle {
     this.show
   });
 
-  showMe(){
-    print(this.season+" "+this.episode+" "+this.title+" "+this.language+" "+this.version+" "+this.link+" "+this.origin+" "+this.show);
-  }
+  String getUri() => "$show/season $season/${getFileName()}";
+  String getDisplayedTitle() => "$show - ${season}x$episode - $title.$version.$language";
+  String getFileName() => "$show - ${season}x$episode - $title.$version.$language.srt";
 
   static Subtitle fromMap(Map map){
     if(map != null){

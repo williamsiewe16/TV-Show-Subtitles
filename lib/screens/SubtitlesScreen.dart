@@ -77,7 +77,7 @@ class SubtitlesScreenState extends State<SubtitlesScreen>{
                           var sub = Subtitle.fromMap(subtitlesMap[i]);
                           subtitles.add(sub);
                         }
-                        if(backgroundImage == null) getImages(showName,subtitles[0]);
+                        if(backgroundImage == null) getImages(subtitles[0]);
                         subtitlesListService.addSubtitlesToShow(show,subtitles,snapshot.data["lastSeason"]);
                         show["lastSeason"] = subtitlesListService.getShow(idShow)["lastSeason"];
                         return SubtitleListZone(key: listKey, subtitles: subtitlesListService.getShow(idShow)["subtitles"], show: show, myKey: listKey);
@@ -99,8 +99,8 @@ class SubtitlesScreenState extends State<SubtitlesScreen>{
     super.dispose();
   }
 
-  void getImages(name,subtitle){
-      image = getFutureImage(name, subtitle).then((data){
+  void getImages(subtitle){
+      image = getFutureImage(subtitle).then((data){
         if(data != null){
           backgroundImage = data["imageURL"];
           appBarKey.currentState.updateFound(data["imageURL"]);

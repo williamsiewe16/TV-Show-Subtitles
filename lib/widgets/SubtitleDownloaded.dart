@@ -27,7 +27,6 @@ class SubtitleDownloadedState extends State<SubtitleDownloaded>{
 
   @override
   Widget build(BuildContext context) {
-    title = "${widget.subtitle.show} - ${widget.subtitle.season}x${widget.subtitle.episode} - ${widget.subtitle.title}.${widget.subtitle.version}.${widget.subtitle.language}";
 
     return Column(
       children: <Widget>[
@@ -36,7 +35,7 @@ class SubtitleDownloadedState extends State<SubtitleDownloaded>{
           child: ListTile(
               leading: IconButton(icon: Icon(Icons.subtitles), onPressed: () => print(path)),
               trailing: IconButton(icon: Icon(Icons.play_arrow), onPressed: () => checkVideo(context)),
-              title: Text("$title")
+              title: Text("${widget.subtitle.getDisplayedTitle()}")
           ),
         ),
         Divider()
@@ -50,12 +49,12 @@ class SubtitleDownloadedState extends State<SubtitleDownloaded>{
   }
 
   Future<String> checkVideo(context) async{
-   // if(await checkPermission(Permission.storage)){
+    if(await checkPermission(Permission.storage)){
    //   File video = await ImagePicker.pickVideo(source: ImageSource.gallery);
-      Navigator.of(context).pushNamed('/video');
+      Navigator.of(context).pushNamed('/video',arguments: {"subtitlePath": "${DownloadService.appDocDir}/shows/${widget.subtitle.getUri()}"});
    //   path = video;
    //   return video.path;
-  //  }
+    }
     return "";
   }
 }
